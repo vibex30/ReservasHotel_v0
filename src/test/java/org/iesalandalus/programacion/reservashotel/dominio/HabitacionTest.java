@@ -195,5 +195,5 @@ public class HabitacionTest {
         assertEquals(String.format("identificador=%s (%d-%d), precio habitación=%s, tipo habitación=%s", habitacion.getIdentificador(), habitacion.getPlanta(), habitacion.getPuerta(), habitacion.getPrecio(), habitacion.getTipoHabitacion()), habitacion.toString(), CADENA_NO_ESPERADA);
     }
 
- */
+*/
 }
