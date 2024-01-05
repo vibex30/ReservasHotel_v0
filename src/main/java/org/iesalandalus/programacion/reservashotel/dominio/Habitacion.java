@@ -86,7 +86,7 @@ public class Habitacion {
     private void setIdentificador(String identificador) {
         this.identificador = identificador;
     }
-    //TODO: HACER LOS NULOS BIEEEEEEEEEEEEEEEEN
+
     private void setPlanta(int planta) {
 
         if(planta<MIN_NUMERO_PLANTA || planta>MAX_NUMERO_PLANTA){
@@ -147,4 +147,5 @@ public class Habitacion {
                 '}';
     }
 }
+
 
