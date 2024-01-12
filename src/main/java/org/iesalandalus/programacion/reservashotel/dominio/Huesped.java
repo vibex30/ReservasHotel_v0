@@ -3,12 +3,13 @@ package org.iesalandalus.programacion.reservashotel.dominio;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Huesped {
-    private final String ER_TELEFONO="";
-    private final String ER_CORREO="";
-    private final String ER_DNI="";
-    public final String FORMATO_FECHA="";
+    private final String ER_TELEFONO="[0-9]{9}";
+    private final String ER_CORREO="[\\w.-]+[@][\\w.-]+[.][a-zA-Z]+";
+    private final String ER_DNI="([\\d]{8})([a-zA-Z])";
+    public final String FORMATO_FECHA="dd/MM/yyyy";
     private String nombre;
     private String telefono;
     private String correo;
@@ -18,7 +19,7 @@ public class Huesped {
 
 
 
-    //contructor con parámentros
+    //constructor con parámentros
     public Huesped(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento){
         this.nombre=nombre;
         this.dni=dni;
@@ -29,29 +30,34 @@ public class Huesped {
 
     //constructor copia
     public Huesped(Huesped huesped){
-        this.nombre=huesped.nombre;
-        this.dni=huesped.dni;
-        this.correo=huesped.correo;
-        this.telefono=huesped.telefono;
-        this.fechaNacimiento=huesped.fechaNacimiento;
+        this.nombre=huesped.getNombre();
+        this.dni=huesped.getDni();
+        this.correo=huesped.getCorreo();
+        this.telefono=huesped.getTelefono();
+        this.fechaNacimiento=huesped.getFechaNacimiento();
 
     }
-    //METODO FORMATEANOMBRE
 
-    private String formateaNombre() {
-        String quitarSobrante = this.nombre.trim().replaceAll("\\s+", " ");
-        //Array
-        String[] dividirPalabras = quitarSobrante.split(" ");
-        //creo el objeto
-        StringBuilder formateaNombre = new StringBuilder();
-        //bucle for-each, aunque creo que no lo hemos dado aún, lo he encontrado por internet y me ha parecido util para este ejercicio
-        for (String palabra : dividirPalabras) {
-            formateaNombre.append(Character.toUpperCase(palabra.charAt(0)))
-                    .append(palabra.substring(1).toLowerCase())
-                    .append(" ");
-        }
-        return formateaNombre.toString().trim();
+    //TODO cambiar nombre del array
+    private String formateaNombre(String nombre){
+        String nombreFormateado="";
+        //quito espacio de la izquierda y derecha (no toca los espacios de en medio)
+        //pasar el texto a minuscula
+        String nombreEnMinusSinEspacios = nombre.toLowerCase().trim();
+        //split, separar cuando haya un espacio, 1 o mas
+        String[] nombreArray = nombreEnMinusSinEspacios.split("\\s+");
+        //poner en mayuscula la primera letra
+        for(int i=0; i<nombreArray.length; i++)
+            if (!nombreArray[i].isEmpty()) {
+                char inicialMayuscula = Character.toUpperCase(nombreArray[i].charAt(0));
+                nombreFormateado += inicialMayuscula + nombreArray[i].substring(1) + " ";
+            }
+
+        return nombreFormateado.trim();
     }
+
+
+
 
 
     //METODO COMPROBAR LETRA DNI
@@ -67,7 +73,9 @@ public class Huesped {
 //TODO EL DNI ES UN STRING NO UN INT ASI QUE HAY QUE CAMBIARLO, TAMBIEN LETRAS_DNI ERAN CHAR
         return null;
     }
-
+    private String getIniciales(){
+        return null;
+    }
 
 
 
@@ -93,8 +101,8 @@ public class Huesped {
         return fechaNacimiento;
     }
 
-    //SETTER
 
+    //SETTER
 
     public void setCorreo(String correo) {
         this.correo = correo;
@@ -105,15 +113,42 @@ public class Huesped {
     }
 
     public void setTelefono(String telefono) {
+
         this.telefono = telefono;
     }
 
-    public void setDni(String dni) {
+    private void setDni(String dni) {
         this.dni = dni;
     }
 
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+    private void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+    //equals, hasCode, toString
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Huesped huesped = (Huesped) o;
+        return Objects.equals(dni, huesped.dni);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dni);
+    }
+
+    @Override
+    public String toString() {
+        return "Huesped{" +
+                "nombre='" + nombre + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", correo='" + correo + '\'' +
+                ", dni='" + dni + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                '}';
+    }
 }
