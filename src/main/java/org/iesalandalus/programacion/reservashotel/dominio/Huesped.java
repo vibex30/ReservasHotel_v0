@@ -4,6 +4,8 @@ import org.iesalandalus.programacion.utilidades.Entrada;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Huesped {
     private final String ER_TELEFONO="[0-9]{9}";
@@ -21,25 +23,44 @@ public class Huesped {
 
     //constructor con parámentros
     public Huesped(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento){
-        this.nombre=nombre;
+        setNombre(nombre);
+        /*
         this.dni=dni;
         this.correo=correo;
         this.telefono=telefono;
         this.fechaNacimiento=fechaNacimiento;
+        */
+        setDni(dni);
+        setCorreo(correo);
+        setTelefono(telefono);
+        setFechaNacimiento(fechaNacimiento);
     }
 
     //constructor copia
     public Huesped(Huesped huesped){
+        /*
         this.nombre=huesped.getNombre();
         this.dni=huesped.getDni();
         this.correo=huesped.getCorreo();
         this.telefono=huesped.getTelefono();
         this.fechaNacimiento=huesped.getFechaNacimiento();
+        */
+        setNombre(huesped.getNombre());
+        setDni(huesped.getDni());
+        setCorreo(huesped.getCorreo());
+        setTelefono(huesped.getTelefono());
+        setFechaNacimiento(huesped.getFechaNacimiento());
 
     }
 
     //TODO cambiar nombre del array
     private String formateaNombre(String nombre){
+        //Siempre que nos den un paramentro hay que validarlo
+        if(nombre==null)
+            throw new NullPointerException("ERROR: El nombre no es válido");
+        if(nombre.isBlank())
+            throw new IllegalArgumentException("ERROR: El nombre no puede estar en blanco");
+
         String nombreFormateado="";
         //quito espacio de la izquierda y derecha (no toca los espacios de en medio)
         //pasar el texto a minuscula
@@ -57,21 +78,23 @@ public class Huesped {
     }
 
 
-
-
-
     //METODO COMPROBAR LETRA DNI
-    private Boolean comprobarLetraDni() {
-        String [] LETRAS_DNI = {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
-        int dni;
-        do {
-            System.out.print("Dime el número de tu DNI: ");
-            dni = Entrada.entero();
-        } while (dni < 1 || dni > 99999999);
-            System.out.println("La letra de tu DNI es: " + LETRAS_DNI[dni % 23]);
+    private Boolean comprobarLetraDni(String dni) {
+        if (dni==null)
+            throw new NullPointerException("ERROR: el dni no puede ser nulo");
+        //Como lo meto por un patron, no es necesario poner .isblank
+        Pattern patronDni= Pattern.compile(ER_DNI);
+        Matcher m;
+        m=patronDni.matcher(dni);
+        if (!m.matches())
+            throw new IllegalArgumentException("ERROR: dni no es correcto");
+        int numeroDni=Integer.parseInt(m.group(1));
+        int resultadoDivision=numeroDni%23;
+        String[] tablaLetras= {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
+        if (m.group(2).equals(tablaLetras[resultadoDivision]))
+            return true;
 
-//TODO EL DNI ES UN STRING NO UN INT ASI QUE HAY QUE CAMBIARLO, TAMBIEN LETRAS_DNI ERAN CHAR
-        return null;
+        return false;
     }
     private String getIniciales(){
         return null;
@@ -109,7 +132,7 @@ public class Huesped {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = formateaNombre(nombre);
     }
 
     public void setTelefono(String telefono) {
@@ -118,7 +141,8 @@ public class Huesped {
     }
 
     private void setDni(String dni) {
-        this.dni = dni;
+        if (comprobarLetraDni(dni))
+            this.dni = dni;
     }
 
     private void setFechaNacimiento(LocalDate fechaNacimiento) {
