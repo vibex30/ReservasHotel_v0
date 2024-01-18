@@ -97,7 +97,15 @@ public class Huesped {
         return false;
     }
     private String getIniciales(){
-        return null;
+        String iniciales = "";
+        for (int i = 0; i < nombre.length(); i++) {
+            if (i == 0 || nombre.charAt(i - 1) == ' ') {
+                iniciales += nombre.charAt(i);
+            }
+        }
+
+        return iniciales.toUpperCase();
+
     }
 
 
