@@ -3,6 +3,7 @@ package org.iesalandalus.programacion.reservashotel.dominio;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +39,8 @@ public class Huesped {
 
     //constructor copia
     public Huesped(Huesped huesped){
+        if (huesped==null)
+            throw new NullPointerException("ERROR: No es posible copiar un huésped nulo.");
         /*
         this.nombre=huesped.getNombre();
         this.dni=huesped.getDni();
@@ -57,9 +60,9 @@ public class Huesped {
     private String formateaNombre(String nombre){
         //Siempre que nos den un paramentro hay que validarlo
         if(nombre==null)
-            throw new NullPointerException("ERROR: El nombre no es válido");
+            throw new NullPointerException("ERROR: El nombre de un huésped no puede ser nulo.");
         if(nombre.isBlank())
-            throw new IllegalArgumentException("ERROR: El nombre no puede estar en blanco");
+            throw new IllegalArgumentException("ERROR: El nombre de un huésped no puede estar vacío.");
 
         String nombreFormateado="";
         //quito espacio de la izquierda y derecha (no toca los espacios de en medio)
@@ -80,21 +83,21 @@ public class Huesped {
 
     //METODO COMPROBAR LETRA DNI
     private Boolean comprobarLetraDni(String dni) {
-        if (dni==null)
-            throw new NullPointerException("ERROR: el dni no puede ser nulo");
+
+
         //Como lo meto por un patron, no es necesario poner .isblank
         Pattern patronDni= Pattern.compile(ER_DNI);
         Matcher m;
         m=patronDni.matcher(dni);
         if (!m.matches())
-            throw new IllegalArgumentException("ERROR: dni no es correcto");
+            throw new IllegalArgumentException("ERROR: El dni del huésped no tiene un formato válido.");
         int numeroDni=Integer.parseInt(m.group(1));
         int resultadoDivision=numeroDni%23;
         String[] tablaLetras= {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
         if (m.group(2).equals(tablaLetras[resultadoDivision]))
             return true;
+            return false;
 
-        return false;
     }
     private String getIniciales(){
         String iniciales = "";
@@ -136,24 +139,45 @@ public class Huesped {
     //SETTER
 
     public void setCorreo(String correo) {
+        if(correo==null)
+            throw new NullPointerException("ERROR: El correo de un huésped no puede ser nulo.");
+        if(!correo.matches(ER_CORREO))
+            throw new IllegalArgumentException("ERROR: El correo del huésped no tiene un formato válido.");
         this.correo = correo;
     }
 
     public void setNombre(String nombre) {
+        if(nombre==null)
+            throw new NullPointerException("ERROR: El nombre de un huésped no puede ser nulo.");
         this.nombre = formateaNombre(nombre);
     }
 
     public void setTelefono(String telefono) {
+        if (telefono==null)
+            throw new NullPointerException("ERROR: El teléfono de un huésped no puede ser nulo.");
+        if(!telefono.matches(ER_TELEFONO))
+            throw new IllegalArgumentException("ERROR: El teléfono del huésped no tiene un formato válido.");
 
         this.telefono = telefono;
     }
 
     private void setDni(String dni) {
-        if (comprobarLetraDni(dni))
-            this.dni = dni;
+        if(dni==null)
+            throw new NullPointerException("ERROR: El dni de un huésped no puede ser nulo.");
+        if(dni.isBlank()||dni.isEmpty())
+            throw new IllegalArgumentException("ERROR: El dni del huésped no tiene un formato válido.");
+
+        if (!dni.matches(ER_DNI))
+            throw new IllegalArgumentException("ERROR: El dni del huésped no tiene un formato válido.");
+
+        this.dni = dni;
     }
 
+
     private void setFechaNacimiento(LocalDate fechaNacimiento) {
+        if (fechaNacimiento==null)
+            throw new NullPointerException("ERROR: La fecha de nacimiento de un huésped no puede ser nula.");
+
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -175,12 +199,11 @@ public class Huesped {
 
     @Override
     public String toString() {
-        return "Huesped{" +
-                "nombre='" + nombre + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", correo='" + correo + '\'' +
-                ", dni='" + dni + '\'' +
-                ", fechaNacimiento=" + fechaNacimiento +
-                '}';
+        return
+                "nombre=" + nombre + " ("+getIniciales()+")" + ", DNI=" + dni + ", correo=" + correo + ", teléfono=" + telefono + ", fecha nacimiento=" + fechaNacimiento.format(DateTimeFormatter.ofPattern(FORMATO_FECHA));
+
+
+
+
     }
 }
