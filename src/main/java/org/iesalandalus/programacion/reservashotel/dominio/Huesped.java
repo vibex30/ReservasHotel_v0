@@ -83,8 +83,6 @@ public class Huesped {
 
     //METODO COMPROBAR LETRA DNI
     private Boolean comprobarLetraDni(String dni) {
-
-
         //Como lo meto por un patron, no es necesario poner .isblank
         Pattern patronDni= Pattern.compile(ER_DNI);
         Matcher m;
@@ -96,7 +94,7 @@ public class Huesped {
         String[] tablaLetras= {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
         if (m.group(2).equals(tablaLetras[resultadoDivision]))
             return true;
-            return false;
+        return false;
 
     }
     private String getIniciales(){

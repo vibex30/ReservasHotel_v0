@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HuespedesTest {
-/*
+
     private static final String ERROR_CAPACIDAD_NO_CORRECTA = "ERROR: La capacidad debe ser mayor que cero.";
     private static final String ERROR_INSERTAR_HUESPED_NULO = "ERROR: No se puede insertar un huésped nulo.";
     private static final String ERROR_BORRAR_HUESPED_NULO = "ERROR: No se puede borrar un huésped nulo.";
@@ -47,7 +47,7 @@ public class HuespedesTest {
     private static final String CORREO_BE = "bog.esponja@iesalandalus.org";
     private static final LocalDate FECHA_NACIMIENTO_BE=LocalDate.of(1996, 10, 30);
 
-
+/*
     private static Huesped huesped1;
     private static Huesped huesped2;
     private static Huesped huesped3;
@@ -385,6 +385,6 @@ public class HuespedesTest {
 
 
 
+*/
 
- */
 }
