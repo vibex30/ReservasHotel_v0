@@ -25,12 +25,6 @@ public class Huesped {
     //constructor con parámentros
     public Huesped(String nombre, String dni, String correo, String telefono, LocalDate fechaNacimiento){
         setNombre(nombre);
-        /*
-        this.dni=dni;
-        this.correo=correo;
-        this.telefono=telefono;
-        this.fechaNacimiento=fechaNacimiento;
-        */
         setDni(dni);
         setCorreo(correo);
         setTelefono(telefono);
@@ -41,13 +35,6 @@ public class Huesped {
     public Huesped(Huesped huesped){
         if (huesped==null)
             throw new NullPointerException("ERROR: No es posible copiar un huésped nulo.");
-        /*
-        this.nombre=huesped.getNombre();
-        this.dni=huesped.getDni();
-        this.correo=huesped.getCorreo();
-        this.telefono=huesped.getTelefono();
-        this.fechaNacimiento=huesped.getFechaNacimiento();
-        */
         setNombre(huesped.getNombre());
         setDni(huesped.getDni());
         setCorreo(huesped.getCorreo());
@@ -56,7 +43,6 @@ public class Huesped {
 
     }
 
-    //TODO cambiar nombre del array
     private String formateaNombre(String nombre){
         //Siempre que nos den un paramentro hay que validarlo
         if(nombre==null)
@@ -85,16 +71,17 @@ public class Huesped {
     private Boolean comprobarLetraDni(String dni) {
         //Como lo meto por un patron, no es necesario poner .isblank
         Pattern patronDni= Pattern.compile(ER_DNI);
-        Matcher m;
-        m=patronDni.matcher(dni);
+        Matcher m =patronDni.matcher(dni);
         if (!m.matches())
             throw new IllegalArgumentException("ERROR: El dni del huésped no tiene un formato válido.");
         int numeroDni=Integer.parseInt(m.group(1));
         int resultadoDivision=numeroDni%23;
         String[] tablaLetras= {"T","R","W","A","G","M","Y","F","P","D","X","B","N","J","Z","S","Q","V","H","L","C","K","E"};
-        if (m.group(2).equals(tablaLetras[resultadoDivision]))
+        if (m.group(2).equalsIgnoreCase(tablaLetras[resultadoDivision]))
             return true;
         return false;
+
+
 
     }
     private String getIniciales(){
@@ -165,9 +152,11 @@ public class Huesped {
         if(dni.isBlank()||dni.isEmpty())
             throw new IllegalArgumentException("ERROR: El dni del huésped no tiene un formato válido.");
 
-        if (!dni.matches(ER_DNI))
+        if (!dni.matches((ER_DNI)))
             throw new IllegalArgumentException("ERROR: El dni del huésped no tiene un formato válido.");
 
+        if(!comprobarLetraDni(dni))
+            throw new IllegalArgumentException("ERROR: La letra del dni del huésped no es correcta.");
         this.dni = dni;
     }
 
