@@ -13,7 +13,7 @@ public class Reserva {
     private final int MAX_HORAS_POSTERIOR_CHECKOUT=12;
     public static final String FORMATO_FECHA_RESERVA="dd/MM/yyyy";
     //TODO : NO SE PORQUE ME PIDE ESTA VARIABLE(LA DE ABAJO) QUE NO SALE EN EL DIAGRAMA DE CLASES.
-    public static final String FORMATO_FECHA_HORA_RESERVA="dd/MM/yyyyhh:mm";
+    public static final String FORMATO_FECHA_HORA_RESERVA="dd/MM/yyyy hh:mm";
     private Huesped huesped;
     private Habitacion habitacion;
     private Regimen regimen;
@@ -28,49 +28,34 @@ public class Reserva {
 
     //Constructor con parámetros
     public Reserva(Huesped huesped, Habitacion habitacion, Regimen regimen, LocalDate fechaInicioReserva, LocalDate fechaFinReserva, int numeroPersonas){
-
-        /*
-        this.huesped=huesped;
-        this.habitacion=habitacion;
-        this.regimen=regimen;
-        this.fechaInicioReserva=fechaInicioReserva;
-        this.fechaFinReserva=fechaFinReserva;
-        this.numeroPersonas=numeroPersonas;
-         */
         setHuesped(huesped);
         setHabitacion(habitacion);
         setRegimen(regimen);
         setFechaInicioReserva(fechaInicioReserva);
         setFechaFinReserva(fechaFinReserva);
+        //this.checkIn=LocalDateTime;
+        this.checkOut=this.checkIn.plusHours(MAX_HORAS_POSTERIOR_CHECKOUT);
         setNumeroPersonas(numeroPersonas);
+
+
 
     }
     //Constructor copia
     public Reserva(Reserva reserva){
         if(reserva==null)
             throw new NullPointerException("ERROR: No es posible copiar una reserva nula.");
-
-        /*
-        this.huesped=reserva.getHuesped();
-        this.habitacion=reserva.getHabitacion();
-        this.regimen=reserva.getRegimen();
-        this.fechaInicioReserva=reserva.getFechaInicioReserva();
-        this.fechaFinReserva=reserva.getFechaFinReserva();
-        this.numeroPersonas=reserva.getNumeroPersonas();
-        */
         setHuesped(reserva.getHuesped());
         setHabitacion(reserva.getHabitacion());
         setRegimen(reserva.getRegimen());
         setFechaInicioReserva(reserva.getFechaInicioReserva());
         setFechaFinReserva(reserva.getFechaFinReserva());
+        setCheckIn(reserva.checkIn);
+        setCheckOut(reserva.checkOut);
         setNumeroPersonas(reserva.getNumeroPersonas());
     }
 
 
-
-
-
-    //GETTER Y SETTER
+    //GETTER
 
 
     public Huesped getHuesped() {
@@ -136,7 +121,6 @@ public class Reserva {
         if(fechaInicioReserva.isBefore (LocalDate.now()))
             throw new IllegalArgumentException("ERROR: La fecha de inicio de la reserva no puede ser anterior al día de hoy.");
         if(fechaInicioReserva.isAfter(LocalDate.now().plusMonths(MAX_NUMERO_MESES_RESERVA)))
-            //todo: 6 meses??????????? en el throw siguiente
             throw new IllegalArgumentException("ERROR: La fecha de inicio de la reserva no puede ser posterior a seis meses.");
         this.fechaInicioReserva = fechaInicioReserva;
     }
@@ -145,7 +129,10 @@ public class Reserva {
         if(fechaFinReserva==null)
             throw new NullPointerException("ERROR: La fecha de fin de una reserva no puede ser nula.");
         if(fechaFinReserva.isBefore(this.fechaInicioReserva))
-            throw new IllegalArgumentException("ERROR: la fecha de fin de reserva no puede ser anterior a la fecha de inicio");
+            throw new IllegalArgumentException("ERROR: La fecha de fin de la reserva debe ser posterior a la de inicio.");
+        if(fechaFinReserva.equals(fechaInicioReserva))
+            throw new IllegalArgumentException("ERROR: La fecha de fin de la reserva debe ser posterior a la de inicio.");
+
         this.fechaFinReserva = fechaFinReserva;
     }
 
@@ -169,14 +156,15 @@ public class Reserva {
     }
 
     private void setPrecio(double precio) {
-        precio = (habitacion.getPrecio() + regimen.getIncrementoPrecio()) + getNumeroPersonas();
+        precio = (habitacion.getPrecio() + regimen.getIncrementoPrecio())* getNumeroPersonas();
         this.precio = precio;
     }
 
     public void setNumeroPersonas(int numeroPersonas) {
-
+        if(numeroPersonas<0)
+            throw new IllegalArgumentException("ERROR: El número de personas de una reserva no puede ser menor o igual a 0.");
         if (numeroPersonas>habitacion.getTipoHabitacion().getNumeroMaximoPersonas())
-            throw new IllegalArgumentException("Error: El numero de personas sobrepasas la capacidad");
+            throw new IllegalArgumentException("Error: El numero de personas sobrepasa la capacidad");
 
         this.numeroPersonas = numeroPersonas;
     }
@@ -202,7 +190,7 @@ public class Reserva {
     public String toString() {
         return
                 "Huesped: "+ getHuesped().getNombre()+" "+
-                        getHuesped().getDni()+" "+ "Habitación:"+habitacion.getIdentificador()+" - "+TipoHabitacion.SIMPLE +" Fecha Inicio Reserva: "+fechaInicioReserva.format(DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA))+" Fecha Fin Reserva: "+fechaFinReserva.format(DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA))+" Checkin: "+checkIn+" Checkout: "+checkOut+" Precio: "+getPrecio()+" Personas: "+getNumeroPersonas();
+                        getHuesped().getDni()+" "+ "Habitación:"+habitacion.getIdentificador()+" - "+TipoHabitacion.SIMPLE +" Fecha Inicio Reserva: "+fechaInicioReserva.format(DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA))+" Fecha Fin Reserva: "+fechaFinReserva.format(DateTimeFormatter.ofPattern(FORMATO_FECHA_RESERVA))+" Checkin: "+getCheckIn()+" Checkout: "+getCheckOut()+" Precio: "+getPrecio()+" Personas: "+getNumeroPersonas();
 
     }
 }

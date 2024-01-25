@@ -26,7 +26,6 @@ public class Habitacion {
         setPlanta(planta);
         setPuerta(puerta);
         setPrecio(precio);
-
         setTipoHabitacion(tipoHabitacion);
         this.identificador=identificador(planta,puerta);
 
@@ -89,17 +88,7 @@ public class Habitacion {
         this.identificador= identificador;
     }
 
-    /*private void setIdentificador(String identificador) {
-        if(identificador==null)
-            throw new NullPointerException("ERROR: No se puede establecer un identificador nulo.QQQ");
-        if(identificador.isBlank())
-            throw new IllegalArgumentException("ERROR: No se puede establecer como puerta de una habitación un valor menor que 0 ni mayor que 14.");
 
-        this.identificador= identificador;
-    }*/
-    //private String generarIdentificador(int planta, int puerta){
-    //  return planta +""+ puerta;
-    //}
     private  String identificador(int planta, int puerta){
         return planta+""+puerta;
     }
